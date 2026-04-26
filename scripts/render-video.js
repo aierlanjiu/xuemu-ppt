@@ -57,7 +57,8 @@ if (!HTML_FILE || HTML_FILE.startsWith('--')) {
   process.exit(1);
 }
 
-const DURATION  = parseFloat(arg('duration', '30'));
+const DURATION_ARG = arg('duration', null);
+let DURATION = DURATION_ARG === null ? null : parseFloat(DURATION_ARG);
 const WIDTH     = parseInt(arg('width', '1920'));
 const HEIGHT    = parseInt(arg('height', '1080'));
 const TRIM_OVERRIDE = arg('trim', null);              // manual override (seconds). If unset, auto-detected.
@@ -80,7 +81,7 @@ const HIDE_CHROME_CSS = `
   .counter, .tCur,
   .phases, .phase-label, .phase,
   .replay, button.replay,
-  .masthead, .kicker, .title,
+  .masthead,
   .footer,
   [data-role="chrome"], [data-record="hidden"] {
     display: none !important;
@@ -88,7 +89,7 @@ const HIDE_CHROME_CSS = `
 `;
 
 console.log(`▸ Rendering: ${HTML_FILE}`);
-console.log(`  size: ${WIDTH}x${HEIGHT} · duration: ${DURATION}s · hide-chrome: ${!KEEP_CHROME}`);
+console.log(`  size: ${WIDTH}x${HEIGHT} · duration: ${DURATION === null ? 'auto' : DURATION + 's'} · hide-chrome: ${!KEEP_CHROME}`);
 console.log(`  output: ${MP4_OUT}`);
 
 (async () => {
@@ -192,7 +193,10 @@ console.log(`  output: ${MP4_OUT}`);
   // mount + fonts.ready). That elapsed time = exact trim offset.
   const T0 = Date.now();
   const page = await recordCtx.newPage();
-  await page.goto(url, { waitUntil: 'load', timeout: 60000 });
+  // Do not wait for full `load` here: a non-critical external script/CDN can
+  // delay load for tens of seconds while the deck has already started. Waiting
+  // only for navigation commit lets the __ready signal define the real trim.
+  await page.goto(url, { waitUntil: 'commit', timeout: 60000 });
 
   // Wait for animation ready signal. Stage component (animations.jsx) sets
   // window.__ready = true on its first rAF after mount + fonts.ready.
@@ -200,6 +204,7 @@ console.log(`  output: ${MP4_OUT}`);
   let animationStartSec;
   const hasReady = await page.waitForFunction(
     () => window.__ready === true,
+    null,
     { timeout: READY_TIMEOUT * 1000 },
   ).then(() => true).catch(() => false);
 
@@ -238,8 +243,32 @@ console.log(`  output: ${MP4_OUT}`);
     console.log('');
   }
 
-  // Now let the animation play out its full duration
-  await page.waitForTimeout(DURATION * 1000 + 300);
+  if (DURATION === null) {
+    DURATION = await page.evaluate(() => {
+      if (Number.isFinite(window.__xuemuTotalDuration) && window.__xuemuTotalDuration > 0) {
+        return window.__xuemuTotalDuration;
+      }
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      if (slides.length) {
+        return slides.reduce((sum, slide) => {
+          const d = Number.parseFloat(slide.dataset.duration || '');
+          return sum + (Number.isFinite(d) && d > 0 ? d : 4.5);
+        }, 0);
+      }
+      return 30;
+    });
+    DURATION = Math.max(1, DURATION + 0.8);
+    console.log(`▸ Auto duration resolved to ${DURATION.toFixed(2)}s`);
+  }
+
+  // Now let the animation play out its full duration. Skill decks set
+  // window.__done at the end, which is more reliable than blind timeout.
+  const finished = await page.waitForFunction(
+    () => window.__done === true,
+    null,
+    { timeout: DURATION * 1000 + 1500 },
+  ).then(() => true).catch(() => false);
+  await page.waitForTimeout(finished ? 300 : 500);
 
   await page.close();
   await recordCtx.close();

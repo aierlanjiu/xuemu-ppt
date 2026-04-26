@@ -39,6 +39,7 @@
 
   /* ============ Deck 容器 + 翻页 ============ */
   #deck{position:fixed;inset:0;width:10000vw;height:100vh;display:flex;flex-wrap:nowrap;transition:transform .9s cubic-bezier(.77,0,.175,1);z-index:10;will-change:transform}
+  body.recording #deck{transition:none !important}
   .slide{width:100vw;height:100vh;flex:0 0 100vw;position:relative;padding:6vh 6vw 10vh 6vw;display:flex;flex-direction:column;overflow:hidden}
   .slide.light{color:var(--ink-base)}
   .slide.dark{color:var(--bg-base)}
@@ -156,29 +157,39 @@
   .slide.dark .hi::after{content:"";position:absolute;left:-.1em;right:-.1em;bottom:-.05em;height:.28em;background:rgba(var(--bg-rgb),.15);z-index:-1}
   .slide.light .hi::after{content:"";position:absolute;left:-.1em;right:-.1em;bottom:-.05em;height:.28em;background:rgba(var(--ink-rgb),.08);z-index:-1}
 
-  /* ============ xuemu 入场动画（仅对当前激活页生效）============ */
-  @keyframes fadeUp{0%{opacity:0;transform:translateY(3vh)}100%{opacity:1;transform:translateY(0)}}
-  @keyframes scaleIn{0%{opacity:0;transform:scale(.94)}100%{opacity:1;transform:scale(1)}}
-  .slide.active .frame > :where(h1,h2,h3,.h-hero,.h-xl,.h-md,.h-sub,.lead,.kicker,.meta-row,blockquote){animation:fadeUp .65s cubic-bezier(.16,1,.3,1) both}
+  /* ============ xuemu 入场动画（支持嵌套正文 + 录制重播）============ */
+  @keyframes fadeUp{0%{opacity:0;transform:translateY(3vh);filter:blur(2px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+  @keyframes scaleIn{0%{opacity:0;transform:scale(.94);filter:blur(2px)}100%{opacity:1;transform:scale(1);filter:blur(0)}}
+  @keyframes textReveal{0%{clip-path:inset(0 100% 0 0);opacity:.25}100%{clip-path:inset(0 0 0 0);opacity:1}}
+  @keyframes codeRise{0%{opacity:0;transform:translateY(2vh);filter:blur(1.5px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+  @keyframes mediaIn{0%{opacity:0;transform:translateX(2vw) scale(.985);filter:blur(2px)}100%{opacity:1;transform:translateX(0) scale(1);filter:blur(0)}}
+  @keyframes glowPulse{0%,100%{text-shadow:0 0 36px rgba(var(--accent-rgb),.12)}50%{text-shadow:0 0 72px rgba(var(--accent-rgb),.34)}}
+
+  .slide.active .frame :where(.kicker,.h-sub,.h-md,.meta-row,blockquote,.callout,.pipeline-section){animation:fadeUp .62s cubic-bezier(.16,1,.3,1) both}
+  .slide.active .frame :where(.h-hero){animation:scaleIn .82s cubic-bezier(.16,1,.3,1) both, glowPulse 3s 1s ease-in-out infinite}
+  .slide.active .frame :where(.h-xl){animation:fadeUp .72s cubic-bezier(.16,1,.3,1) both}
+  .slide.active .frame :where(.lead,p:not(.step-desc):not(.stat-note)){animation:textReveal .76s .12s cubic-bezier(.16,1,.3,1) both}
+  .slide.active .frame :where(pre){animation:codeRise .64s .28s cubic-bezier(.16,1,.3,1) both}
+  .slide.active .frame :where(.frame-img){animation:mediaIn .78s .34s cubic-bezier(.16,1,.3,1) both}
+
   .slide.active .frame > :nth-child(1){animation-delay:0s}
-  .slide.active .frame > :nth-child(2){animation-delay:.07s}
-  .slide.active .frame > :nth-child(3){animation-delay:.14s}
-  .slide.active .frame > :nth-child(4){animation-delay:.20s}
-  .slide.active .frame > :nth-child(5){animation-delay:.26s}
-  .slide.hero.active .frame > h1,.slide.hero.active .frame > .h-hero{animation:scaleIn .8s cubic-bezier(.16,1,.3,1) both}
-  .slide.active .stat-card{animation:fadeUp .5s cubic-bezier(.16,1,.3,1) both}
-  .slide.active .stat-card:nth-child(1){animation-delay:.04s}
-  .slide.active .stat-card:nth-child(2){animation-delay:.10s}
-  .slide.active .stat-card:nth-child(3){animation-delay:.16s}
-  .slide.active .stat-card:nth-child(4){animation-delay:.22s}
-  .slide.active .stat-card:nth-child(5){animation-delay:.28s}
-  .slide.active .stat-card:nth-child(6){animation-delay:.34s}
-  .slide.active .step{animation:fadeUp .45s cubic-bezier(.16,1,.3,1) both}
-  .slide.active .step:nth-child(1){animation-delay:.04s}
-  .slide.active .step:nth-child(2){animation-delay:.10s}
-  .slide.active .step:nth-child(3){animation-delay:.16s}
-  .slide.active .step:nth-child(4){animation-delay:.22s}
-  .slide.active .step:nth-child(5){animation-delay:.28s}
+  .slide.active .frame > :nth-child(2){animation-delay:.08s}
+  .slide.active .frame > :nth-child(3){animation-delay:.16s}
+  .slide.active .frame > :nth-child(4){animation-delay:.24s}
+  .slide.active .frame > :nth-child(5){animation-delay:.32s}
+  .slide.active .stat-card{animation:fadeUp .55s cubic-bezier(.16,1,.3,1) both}
+  .slide.active .stat-card:nth-child(1){animation-delay:.08s}
+  .slide.active .stat-card:nth-child(2){animation-delay:.15s}
+  .slide.active .stat-card:nth-child(3){animation-delay:.22s}
+  .slide.active .stat-card:nth-child(4){animation-delay:.29s}
+  .slide.active .stat-card:nth-child(5){animation-delay:.36s}
+  .slide.active .stat-card:nth-child(6){animation-delay:.43s}
+  .slide.active .step{animation:fadeUp .5s cubic-bezier(.16,1,.3,1) both}
+  .slide.active .step:nth-child(1){animation-delay:.08s}
+  .slide.active .step:nth-child(2){animation-delay:.16s}
+  .slide.active .step:nth-child(3){animation-delay:.24s}
+  .slide.active .step:nth-child(4){animation-delay:.32s}
+  .slide.active .step:nth-child(5){animation-delay:.40s}
 
 
   /* ============ 文字揭示动画 ============ */
@@ -291,7 +302,7 @@ function bootGL(canvasId,fsSrc){
 }
 const drawDark=bootGL('bg-dark',FS_DARK),drawLight=bootGL('bg-light',FS_LIGHT);
 const t0=Date.now();
-(function loop(){const t=(Date.now()-t0)/1000;drawDark(t);drawLight(t);requestAnimationFrame(loop)})();
+(function loop(){const t=(Date.now()-t0)/1000;drawDark(t);drawLight(t);if(!window.__recording)requestAnimationFrame(loop)})();
 
 // =============== 导航 ===============
 const deck=document.getElementById('deck');
@@ -303,6 +314,13 @@ slides.forEach((s,i)=>{
   const b=document.createElement('button');b.className='dot';b.dataset.i=i;
   b.setAttribute('aria-label','Page '+(i+1));b.onclick=()=>go(i);nav.appendChild(b);
 });
+function activateSlide(n){
+  slides.forEach(s=>s.classList.remove('active'));
+  const el=slides[n];
+  if(!el)return;
+  void el.offsetWidth;
+  el.classList.add('active');
+}
 function go(n){
   if(lock)return;
   idx=Math.max(0,Math.min(total-1,n));
@@ -310,6 +328,8 @@ function go(n){
   nav.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
   const el=slides[idx],th=el.dataset.theme||(el.classList.contains('light')?'light':(el.classList.contains('dark')?'dark':'dark'));
   document.body.classList.toggle('light-bg',th==='light');
+  activateSlide(idx);
+  if(window.__playSlide) setTimeout(()=>window.__playSlide(idx),450);
   lock=true;setTimeout(()=>lock=false,700);
   if(window.__playSlide) setTimeout(()=>window.__playSlide(idx), 450);
 }
@@ -352,25 +372,37 @@ addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].client
 addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy))go(idx+(dx<0?1:-1))},{passive:true});
 
 // =============== xuemu 入场动画 + 录制模式 ===============
-function activateSlide(n){slides.forEach((s,i)=>s.classList.toggle('active',i===n))}
 activateSlide(0);
 
 if(window.__recording){
+  document.body.classList.add('recording');
+  deck.style.transition='none';
   let recIdx=0,recTimer=null,stopped=false;
   const durations=[]; slides.forEach(s=>{const d=parseFloat(s.dataset.duration);durations.push(d>0?d:4.5)});
+  window.__xuemuTotalDuration=durations.reduce((a,b)=>a+b,0);
+  function waitForDeckAssets(){
+    const images=[...document.images].map(img=>{
+      if(img.decode)return img.decode().catch(()=>{});
+      if(img.complete)return Promise.resolve();
+      return new Promise(resolve=>{img.onload=resolve;img.onerror=resolve});
+    });
+    const fonts=document.fonts&&document.fonts.ready?document.fonts.ready.catch(()=>{}):Promise.resolve();
+    const ready=Promise.all([...images,fonts]);
+    const cap=new Promise(resolve=>setTimeout(resolve,4000));
+    return Promise.race([ready,cap]);
+  }
   function animSlide(i){
-    const s=slides[i]; if(!s)return;
-    const els=[...s.querySelectorAll('.h-hero,.h-xl,.h-md,.lead,.kicker,.body-zh,p,li,.callout,.stat-card,.step')];
-    els.forEach((el,j)=>{el.style.opacity='0';el.style.transform='translateY(2.5vh)';setTimeout(()=>{el.style.transition='opacity .5s cubic-bezier(.16,1,.3,1), transform .5s cubic-bezier(.16,1,.3,1)';el.style.opacity='';el.style.transform=''},60+j*40)});
+    activateSlide(i);
+    if(window.__playSlide) setTimeout(()=>window.__playSlide(i),120);
   }
   function recGo(n){
     idx=Math.max(0,Math.min(total-1,n));deck.style.transform=`translateX(${-idx*100}vw)`;
     nav.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
     const el=slides[idx],th=el.dataset.theme||(el.classList.contains('light')?'light':(el.classList.contains('dark')?'dark':'dark'));
-    document.body.classList.toggle('light-bg',th==='light');if(window.__playSlide)setTimeout(()=>window.__playSlide(idx),200);
+    document.body.classList.toggle('light-bg',th==='light');animSlide(idx);
   }
-  function recAdvance(){if(stopped)return;if(recIdx>=total-1){recGo(0);animSlide(0);stopped=true;return}recIdx++;recGo(recIdx);animSlide(recIdx);recTimer=setTimeout(recAdvance,durations[recIdx]*1000)}
-  animSlide(0);setTimeout(()=>{window.__ready=true;recTimer=setTimeout(recAdvance,durations[0]*1000)},500);
+  function recAdvance(){if(stopped)return;if(recIdx>=total-1){stopped=true;window.__done=true;return}recIdx++;recGo(recIdx);recTimer=setTimeout(recAdvance,durations[recIdx]*1000)}
+  recGo(0);waitForDeckAssets().then(()=>{requestAnimationFrame(()=>requestAnimationFrame(()=>{window.__ready=true;recTimer=setTimeout(recAdvance,durations[0]*1000)}))});
 }else{go(0)}
 </script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
