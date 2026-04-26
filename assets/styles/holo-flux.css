@@ -1,0 +1,14 @@
+/* ============ ⚡ 电光纸 · Holo-Flux ============
+   赛博工业 + 全息纹理 + 酸色 + 电路板走线
+   气质: 高互动社媒 / 霓虹酸性 / Z 世代
+*/
+:root{
+  --bg-base:#0d0d0d;        --bg-rgb:13,13,13;
+  --bg-tint:#1a1a2e;
+  --ink-base:#e0ffe0;       --ink-rgb:224,255,224;
+  --ink-tint:#80cc80;
+  --accent:#39ff14;          --accent-rgb:57,255,20;
+  --surface:rgba(57,255,20,.05);
+  --bg-texture:none;
+  --shadow-preset:0 0 20px rgba(57,255,20,.2);
+}

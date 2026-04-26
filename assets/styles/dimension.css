@@ -1,0 +1,14 @@
+/* ============ 💥 维度冲击 · Dimension Breaker ============
+   2D图纸 vs 3D机械 撕裂/碾压/烧灼
+   气质: 重工业 × 高端编辑 / 戏剧化 / 发布会级
+*/
+:root{
+  --bg-base:#f5f0e8;        --bg-rgb:245,240,232;
+  --bg-tint:#e0d5b8;
+  --ink-base:#1a1a1a;       --ink-rgb:26,26,26;
+  --ink-tint:#3a3a3a;
+  --accent:#e63900;          --accent-rgb:230,57,0;
+  --surface:rgba(255,255,255,.6);
+  --bg-texture:none;
+  --shadow-preset:0 16px 48px -8px rgba(0,0,0,.3);
+}

@@ -1,0 +1,14 @@
+/* ============ 🔮 CFD水晶 · Crystal Slate ============
+   毛玻璃 + 全息HUD + 青色发光线 + 爆炸图
+   气质: 空间计算 / 工程仿真 / 科技前沿
+*/
+:root{
+  --bg-base:#0a1628;        --bg-rgb:10,22,40;
+  --bg-tint:#0d2240;
+  --ink-base:#e0f0ff;       --ink-rgb:224,240,255;
+  --ink-tint:#a0c8e8;
+  --accent:#00d4ff;          --accent-rgb:0,212,255;
+  --surface:rgba(255,255,255,.05);
+  --bg-texture:none;
+  --shadow-preset:0 0 30px rgba(0,212,255,.15);
+}

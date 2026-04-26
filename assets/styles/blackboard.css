@@ -1,0 +1,15 @@
+/* ============ 📝 黑板报 · Blackboard ============
+   暗绿黑板 + 粉笔手写 + 不锈钢零件 + 卡尺道具
+   气质: 工程教育 / 硬核技术 / 差异化极强
+   字体例外: 标题可用行书手写体
+*/
+:root{
+  --bg-base:#1a2a1f;        --bg-rgb:26,42,31;
+  --bg-tint:#253d2c;
+  --ink-base:#d4c8a8;       --ink-rgb:212,200,168;
+  --ink-tint:#b8a878;
+  --accent:#c44a3a;          --accent-rgb:196,74,58;
+  --surface:rgba(212,200,168,.08);
+  --bg-texture:none;
+  --shadow-preset:none;
+}

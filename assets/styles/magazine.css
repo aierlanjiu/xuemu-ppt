@@ -1,0 +1,15 @@
+/* ============ 🖋 杂志风 · Magazine ============
+   纸质纹理 + 普鲁士蓝 + 俯拍平铺 + 硬日光影
+   气质: 高端编辑杂志 × Braun 设计
+   适合: 通用分享 / 商业发布 / 品牌展示
+*/
+:root{
+  --bg-base:#f1efea;        --bg-rgb:241,239,234;
+  --bg-tint:#e8e5de;
+  --ink-base:#0a0a0b;       --ink-rgb:10,10,11;
+  --ink-tint:#18181a;
+  --accent:#c44536;          --accent-rgb:196,69,54;
+  --surface:rgba(255,255,255,.7);
+  --bg-texture:none;
+  --shadow-preset:0 12px 40px -16px rgba(0,0,0,.15);
+}
